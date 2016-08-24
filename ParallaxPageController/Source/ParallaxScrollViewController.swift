@@ -100,7 +100,23 @@ public class ParallaxScrollViewController: UIViewController {
     
     //Keeps track of the current page index in order to track scroll direction (i.e. if scrolling backwards or forwards)
     fileprivate var currentPageIndex: Int = 0 {
+        willSet {
+            guard newValue != currentPageIndex else {
+                return
+            }
+            
+            let newForegroundController = pages[newValue].foregroundController
+            newForegroundController.beginAppearanceTransition(true, animated: false)
+        }
         didSet {
+            guard oldValue != currentPageIndex else {
+                return
+            }
+            
+            let foregroundController = pages[currentPageIndex].foregroundController
+            foregroundController.endAppearanceTransition()
+            
+            //Update page control
             pageControl.currentPage = currentPageIndex
         }
     }
