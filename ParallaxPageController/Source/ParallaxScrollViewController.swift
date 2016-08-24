@@ -68,10 +68,10 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     ///The amount of friction to apply to the background parallax effect. Lesser values result in a greater parallax effect. Must be > 0.
-    public var backgroundParallaxFriction: CGFloat = 3 {
+    public var parallaxFrictionFactor: CGFloat = 3 {
         willSet {
             guard newValue > 0 else {
-                fatalError("backgroundParallaxFriction must be larger than 0")
+                fatalError("parallaxFrictionFactor must be larger than 0")
             }
         }
     }
@@ -222,7 +222,7 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 let pageSize = sourceScrollView.pageSize()
                 
                 //Calculate source XOffset
-                var sourceXOffset = (pageSize * sourceTransitionProgress) / backgroundParallaxFriction
+                var sourceXOffset = (pageSize * sourceTransitionProgress) / parallaxFrictionFactor
                 
                 //Apply the appropriate parallax effect
                 sourceXOffset *= CGFloat(transitionEffect.rawValue)
@@ -232,7 +232,7 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                     sourceXOffset *= -1
                 }
                 
-                var destXOffset = (pageSize * destTransitionProgress) / backgroundParallaxFriction
+                var destXOffset = (pageSize * destTransitionProgress) / parallaxFrictionFactor
                 destXOffset *= CGFloat(transitionEffect.rawValue)
                 if !isGoingBackwards {
                     destXOffset *= -1
