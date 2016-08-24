@@ -43,6 +43,8 @@ public class ParallaxScrollViewController: UIViewController {
     @IBOutlet weak var foregroundScrollView: UIScrollView!
     @IBOutlet weak var foregroundStackView: UIStackView!
     
+    @IBOutlet public weak var pageControl: UIPageControl!
+    
     //MARK: Properties
     
     fileprivate var pages: [PageContent] = [] {
@@ -51,11 +53,16 @@ public class ParallaxScrollViewController: UIViewController {
         }
         didSet {
             add(pages: pages)
+            pageControl.numberOfPages = pages.count
         }
     }
     
     //Keeps track of the current page index in order to track scroll direction (i.e. if scrolling backwards or forwards)
-    fileprivate var currentPageIndex: Int = 0
+    fileprivate var currentPageIndex: Int = 0 {
+        didSet {
+            pageControl.currentPage = currentPageIndex
+        }
+    }
     
     //The current page before the trait collection changes, e.g. prior to rotation occurrs
     private var pageIndexBeforeTraitCollectionChange: Int = 0
@@ -123,7 +130,7 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 //The transition progress of the leftmost page involved in the transition
                 let leftTransitionProgress = percentScrolledInPage - CGFloat(scrollView.currentPage())
                 
-                //The transition progress of the rightmost page involved in the transition
+                //The transition progress of the rightmost page involved in the transition (the opposite of the leftTransitionProgress)
                 let rightTransitionProgress = (1 - leftTransitionProgress)
                 
                 //The transition progress of the current/source page

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -45,14 +46,17 @@
                             <outlet property="delegate" destination="Dhd-yy-6zU" id="UHz-7J-hVV"/>
                         </connections>
                     </scrollView>
+                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="QjK-KO-6K0"/>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="its-3b-dxy" secondAttribute="trailing" id="8tS-Rn-wLd"/>
                     <constraint firstAttribute="bottom" secondItem="its-3b-dxy" secondAttribute="bottom" id="Blj-R6-P3b"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="QjK-KO-6K0" secondAttribute="bottom" constant="20" id="HA2-dc-EFX"/>
                     <constraint firstItem="9MP-96-SSH" firstAttribute="width" secondItem="its-3b-dxy" secondAttribute="width" id="KkD-HT-lCs"/>
                     <constraint firstItem="OvD-r4-6Zz" firstAttribute="height" secondItem="oT1-8D-itd" secondAttribute="height" id="Mh5-dh-pPO"/>
                     <constraint firstItem="its-3b-dxy" firstAttribute="leading" secondItem="oT1-8D-itd" secondAttribute="leading" id="NaB-zM-HKL"/>
                     <constraint firstItem="9MP-96-SSH" firstAttribute="centerY" secondItem="its-3b-dxy" secondAttribute="centerY" id="R82-cH-P5o"/>
+                    <constraint firstItem="QjK-KO-6K0" firstAttribute="centerX" secondItem="oT1-8D-itd" secondAttribute="centerX" id="TnO-h2-hZg"/>
                     <constraint firstItem="its-3b-dxy" firstAttribute="top" secondItem="oT1-8D-itd" secondAttribute="top" id="WXf-Nc-oow"/>
                     <constraint firstItem="Qf9-3c-Z4u" firstAttribute="height" secondItem="oT1-8D-itd" secondAttribute="height" id="a4p-tJ-3vq"/>
                     <constraint firstItem="Qf9-3c-Z4u" firstAttribute="width" secondItem="oT1-8D-itd" secondAttribute="width" placeholder="YES" id="cdP-C3-CsZ" userLabel="Placeholder Background H Stack View Width"/>
@@ -66,6 +70,7 @@
                 <outlet property="backgroundStackView" destination="Qf9-3c-Z4u" id="J6N-Kg-Rmk"/>
                 <outlet property="foregroundScrollView" destination="9MP-96-SSH" id="uYG-Kr-H5r"/>
                 <outlet property="foregroundStackView" destination="OvD-r4-6Zz" id="Fgp-Ec-NbE"/>
+                <outlet property="pageControl" destination="QjK-KO-6K0" id="oHO-7Q-nwA"/>
             </connections>
             <point key="canvasLocation" x="-344" y="36"/>
         </viewController>
