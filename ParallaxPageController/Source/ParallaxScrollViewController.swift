@@ -35,9 +35,19 @@ public struct PageContent {
 
 public class ParallaxScrollViewController: UIViewController {
     
+    public enum TransitionEffect: Int {
+        ///A "revealing" effect. Combine with friction = 1 for a curtain-like effect.
+        case reveal = -1
+        
+        ///An "appearing" effect.
+        case appear = 1
+    }
+    
     //MARK: Public
     
     @IBOutlet public weak var pageControl: UIPageControl!
+    
+    public var transitionEffect = TransitionEffect.reveal
     
     public var borderWidth: CGFloat = 1.5 {
         didSet {
@@ -195,12 +205,19 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 
                 let pageSize = sourceScrollView.pageSize()
                 
+                //Calculate source XOffset
                 var sourceXOffset = (pageSize * sourceTransitionProgress) / backgroundParallaxFriction
+                
+                //Apply the appropriate parallax effect
+                sourceXOffset *= CGFloat(transitionEffect.rawValue)
+                
+                //Consider direction
                 if isGoingBackwards {
                     sourceXOffset *= -1
                 }
                 
                 var destXOffset = (pageSize * destTransitionProgress) / backgroundParallaxFriction
+                destXOffset *= CGFloat(transitionEffect.rawValue)
                 if !isGoingBackwards {
                     destXOffset *= -1
                 }
