@@ -105,6 +105,11 @@ public class ParallaxScrollViewController: UIViewController {
                 return
             }
             
+            //Send viewWillDisappear
+            let previousForegroundController = pages[currentPageIndex].foregroundController
+            previousForegroundController.beginAppearanceTransition(false, animated: false)
+            
+            //Send viewWillAppear
             let newForegroundController = pages[newValue].foregroundController
             newForegroundController.beginAppearanceTransition(true, animated: false)
         }
@@ -113,6 +118,11 @@ public class ParallaxScrollViewController: UIViewController {
                 return
             }
             
+            //Send viewDidDisappear
+            let previousForegroundController = pages[oldValue].foregroundController
+            previousForegroundController.endAppearanceTransition()
+            
+            //Send viewDidAppear
             let foregroundController = pages[currentPageIndex].foregroundController
             foregroundController.endAppearanceTransition()
             
