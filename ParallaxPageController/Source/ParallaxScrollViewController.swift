@@ -25,11 +25,11 @@ public struct ParallaxPageControllerFactory {
 public struct PageContent {
     
     let backgroundImageController: ScrollableImageController
-    let controller: UIViewController
+    let foregroundController: UIViewController
     
     public init(backgroundImage: UIImage, controller: UIViewController) {
         self.backgroundImageController = ScrollableImageControllerFactory.make(image: backgroundImage)
-        self.controller = controller
+        self.foregroundController = controller
     }
 }
 
@@ -38,6 +38,24 @@ public class ParallaxScrollViewController: UIViewController {
     //MARK: Public
     
     @IBOutlet public weak var pageControl: UIPageControl!
+    
+    public var borderWidth: CGFloat = 1.5 {
+        didSet {
+            updateBorders()
+        }
+    }
+    
+    public var borderColor = UIColor.black {
+        didSet {
+            updateBorders()
+        }
+    }
+    
+    public var showBorders = false {
+        didSet {
+            updateBorders()
+        }
+    }
     
     ///The amount of friction to apply to the background parallax effect. Lesser values result in a greater parallax effect. Must be > 0.
     public var backgroundParallaxFriction: CGFloat = 3 {
@@ -102,11 +120,19 @@ public class ParallaxScrollViewController: UIViewController {
     
     //MARK: Private
     
+    private func updateBorders() {
+        for page in pages {
+            let view = page.foregroundController.view!
+            view.layer.borderWidth = showBorders ? borderWidth : 0
+            view.layer.borderColor = borderColor.cgColor
+        }
+    }
+    
     ///Adds all the pages to self
     private func add(pages: [PageContent]) {
         for page in pages {
             add(page.backgroundImageController, to: backgroundStackView)
-            add(page.controller, to: foregroundStackView)
+            add(page.foregroundController, to: foregroundStackView)
         }
     }
 
