@@ -35,6 +35,20 @@ public struct PageContent {
 
 public class ParallaxScrollViewController: UIViewController {
     
+    //MARK: Public
+    
+    @IBOutlet public weak var pageControl: UIPageControl!
+    
+    ///The amount of friction to apply to the background parallax effect. Lesser values result in a greater parallax effect. Must be > 0.
+    public var backgroundParallaxFriction: CGFloat = 3 {
+        willSet {
+            guard newValue > 0 else {
+                fatalError("backgroundParallaxFriction must be larger than 0")
+            }
+        }
+    }
+    
+    
     //MARK: IBOutlets
     
     @IBOutlet weak var backgroundScrollView: UIScrollView!
@@ -43,7 +57,6 @@ public class ParallaxScrollViewController: UIViewController {
     @IBOutlet weak var foregroundScrollView: UIScrollView!
     @IBOutlet weak var foregroundStackView: UIStackView!
     
-    @IBOutlet public weak var pageControl: UIPageControl!
     
     //MARK: Properties
     
@@ -155,14 +168,13 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 let destinationScrollView = scrollableImageController(at: transitionDestinationElementIndex)?.scrollView!
                 
                 let pageSize = sourceScrollView.pageSize()
-                let friction: CGFloat = 3
                 
-                var sourceXOffset = (pageSize * sourceTransitionProgress) / friction
+                var sourceXOffset = (pageSize * sourceTransitionProgress) / backgroundParallaxFriction
                 if isGoingBackwards {
                     sourceXOffset *= -1
                 }
                 
-                var destXOffset = (pageSize * destTransitionProgress) / friction
+                var destXOffset = (pageSize * destTransitionProgress) / backgroundParallaxFriction
                 if !isGoingBackwards {
                     destXOffset *= -1
                 }

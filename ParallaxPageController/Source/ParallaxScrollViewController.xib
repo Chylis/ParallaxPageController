@@ -46,7 +46,7 @@
                             <outlet property="delegate" destination="Dhd-yy-6zU" id="UHz-7J-hVV"/>
                         </connections>
                     </scrollView>
-                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="QjK-KO-6K0"/>
+                    <pageControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="QjK-KO-6K0"/>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="its-3b-dxy" secondAttribute="trailing" id="8tS-Rn-wLd"/>
