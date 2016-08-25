@@ -4,7 +4,8 @@
 - A page based scroll view with a configurable parallax effect. Useful for e.g. tutorial/onboarding scenes.
 - Supports both Portrait and Landscape
 - Configurable:
-  - parallax effect ("reveal" vs "appear" transition styles + friction)
+  - background and foreground parallax effects ("reveal" vs "appear" transition styles) 
+  - background and foreground parallax speeds (0 == no parallax, 1 == increased parallax, etc)
   - border style (visibility, color, width)
   - UIPageControl (public access)
 
@@ -58,13 +59,13 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
   //3. Configure the ParallaxPageController:
   parallaxVc.pageControl.pageIndicatorTintColor = UIColor.black
   parallaxVc.pageControl.currentPageIndicatorTintColor = UIColor.red
-  parallaxVc.parallaxFrictionFactor = 4
+  parallaxVc.backgroundParallaxSpeedFactor = 1
+  parallaxVc.backgroundTransitionEffect = .reveal
+  parallaxVc.foregroundParallaxSpeedFactor = 3
+  parallaxVc.foregroundTransitionEffect = .appear
   parallaxVc.showBorders = true
   parallaxVc.borderWidth = 1
   parallaxVc.borderColor = UIColor.black
-  parallaxVc.transitionEffect = .reveal
-
-
 
 
   window = UIWindow()
