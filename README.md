@@ -79,6 +79,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 -- 
 ## Known Issues:
 -- 
-
+## TODO:
+- Add possibility to have a view (e.g. a view controller's view) instead of the background image view. This would enable having a e.g. video as a background.
 
 Feel free to contribute!
