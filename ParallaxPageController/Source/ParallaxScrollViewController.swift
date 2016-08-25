@@ -64,32 +64,52 @@ public class ParallaxScrollViewController: UIViewController {
     
     @IBOutlet public weak var pageControl: UIPageControl!
     
+    ///The transition effect to apply to the background view when scrolling
     public var backgroundTransitionEffect = TransitionEffect.reveal
+    
+    ///The transition effect to apply to the foreground view when scrolling
     public var foregroundTransitionEffect = TransitionEffect.appear
     
-    public var borderWidth: CGFloat = 1.5 {
+    //The amount of speed to apply to the background parallax effect. Larger values result in a greater parallax effect. A value of 0 disables the parallax effect.
+    public var backgroundParallaxSpeedFactor: CGFloat = 1
+    
+    ///The amount of speed to apply to the foreground parallax effect. Larger values result in a greater parallax effect. A value of 0 disables the parallax effect.
+    public var foregroundParallaxSpeedFactor: CGFloat = 1.5
+    
+    ///If a horizontal motion effect should be applied to the foreground view
+    public var applyHorizontalMotionEffect = true {
         didSet {
-            updateBorders()
+            updateMotionEffect()
         }
     }
     
-    public var borderColor = UIColor.black {
+    ///The strength of the motion effect applied to the foreground view
+    public var motionEffectStrength = 10 {
         didSet {
-            updateBorders()
+            updateMotionEffect()
         }
     }
     
+    ///If borders between the pages should be visible or not
     public var showBorders = false {
         didSet {
             updateBorders()
         }
     }
     
-    ///The amount of speed to apply to the background parallax effect. Larger values result in a greater parallax effect. A value of 0 disables the parallax effect.
-    public var backgroundParallaxSpeedFactor: CGFloat = 1
+    ///The width of the page borders
+    public var borderWidth: CGFloat = 1.5 {
+        didSet {
+            updateBorders()
+        }
+    }
     
-    ///The amount of speed to apply to the foreground parallax effect. Larger values result in a greater parallax effect. A value of 0 disables the parallax effect.
-    public var foregroundParallaxSpeedFactor: CGFloat = 3
+    ///The color of the page borders
+    public var borderColor = UIColor.black {
+        didSet {
+            updateBorders()
+        }
+    }
     
     //MARK: IBOutlets
     
@@ -175,6 +195,16 @@ public class ParallaxScrollViewController: UIViewController {
             let scrollview = foregroundControllerScrollView(at: index)!
             scrollview.layer.borderWidth = showBorders ? borderWidth : 0
             scrollview.layer.borderColor = borderColor.cgColor
+        }
+    }
+    
+    private func updateMotionEffect() {
+            for page in pages {
+                let view = page.foregroundController.view!
+                view.motionEffects.forEach { view.removeMotionEffect($0)}
+                if applyHorizontalMotionEffect {
+                    view.addMotionEffect(UIMotionEffect.make(strength: motionEffectStrength, type: .tiltAlongHorizontalAxis))
+                }
         }
     }
     

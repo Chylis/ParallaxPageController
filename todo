@@ -1,11 +1,6 @@
 1) Ability to add 'backgroundViewController' rather than 'backgroundImage' (or both?). Single code path and replicated view structure!
  - Should be done exactly the same way as the foreground controller is added, i.e. by creating a custom uiscrollview and adding the background view controllers view into it (don't forget to call the background view controller's life cycle methods)
 
-2) Add motion effect + configurable value
-
-3) Configurable:
+2) Configurable:
   - Page control Y position
-  - UIMotionEffect
   - uiimageview contentmode
-
-

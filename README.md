@@ -6,6 +6,7 @@
 - Configurable:
   - background and foreground parallax effects ("reveal" vs "appear" transition styles) 
   - background and foreground parallax speeds (0 == no parallax, 1 == increased parallax, etc)
+  - foreground horizontal parallax motion effect, applied when moving device
   - border style (visibility, color, width)
   - UIPageControl (public access)
 
@@ -57,15 +58,17 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
   let parallaxVc = ParallaxPageControllerFactory.make(pages: [page1,page2,page3,page4])
 
   //3. Configure the ParallaxPageController:
-  parallaxVc.pageControl.pageIndicatorTintColor = UIColor.black
-  parallaxVc.pageControl.currentPageIndicatorTintColor = UIColor.red
   parallaxVc.backgroundParallaxSpeedFactor = 1
   parallaxVc.backgroundTransitionEffect = .reveal
   parallaxVc.foregroundParallaxSpeedFactor = 3
   parallaxVc.foregroundTransitionEffect = .appear
+  parallaxVc.applyHorizontalMotionEffect = true
+  parallaxVc.motionEffectStrength = 10
   parallaxVc.showBorders = true
   parallaxVc.borderWidth = 1
   parallaxVc.borderColor = UIColor.black
+  parallaxVc.pageControl.pageIndicatorTintColor = UIColor.black
+  parallaxVc.pageControl.currentPageIndicatorTintColor = UIColor.red
 
 
   window = UIWindow()
