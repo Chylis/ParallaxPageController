@@ -10,12 +10,19 @@
   - border style (visibility, color, width)
   - UIPageControl (public access)
 
-### Transition effect styles
-#### Reveal
-![reveal_style](https://cloud.githubusercontent.com/assets/653946/17932755/c7239c7e-6a11-11e6-87f1-2ab52a92a5f9.gif)
+### Transition effect style examples
 
-#### Appear
-![appear_style](https://cloud.githubusercontent.com/assets/653946/17932692/83d85a5e-6a11-11e6-8609-435a803a1c88.gif)
+#### Background Reveal, Foreground Reveal (both parallax speeds are set to UIScreen.main.bounds.width / 100)
+![reveal_reveal](https://cloud.githubusercontent.com/assets/653946/17971540/87d98bd0-6adb-11e6-948d-47c041c6ad60.gif)
+
+#### Background Reveal, Foreground Appear
+![reveal_appear](https://cloud.githubusercontent.com/assets/653946/17971531/815a1982-6adb-11e6-99d8-1915218efbfa.gif)
+
+#### Background Appear, Foreground Appear
+![appear_appear](https://cloud.githubusercontent.com/assets/653946/17971518/78824046-6adb-11e6-953c-4b1b3e60d94c.gif)
+
+#### Background Appear, Foreground Reveal
+![appear_reveal](https://cloud.githubusercontent.com/assets/653946/17971511/726ad9ac-6adb-11e6-9b64-559b9caa348a.gif)
 
 ## Installation:
   - Fetch with Carthage, e.g:
