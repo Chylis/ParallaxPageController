@@ -1,6 +1,7 @@
-1) Ability to add 'backgroundViewController' rather than 'backgroundImage' (or both?). Single code path and replicated view structure!
- - Should be done exactly the same way as the foreground controller is added, i.e. by creating a custom uiscrollview and adding the background view controllers view into it (don't forget to call the background view controller's life cycle methods)
-
-2) Configurable:
+1) Configurable:
   - Page control Y position
   - uiimageview contentmode
+
+
+Code:
+- clean up (e.g. forwarding of 'viewWill/Did appear/disappear events), etc

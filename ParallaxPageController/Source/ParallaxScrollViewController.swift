@@ -24,12 +24,17 @@ public struct ParallaxPageControllerFactory {
 
 public struct PageContent {
     
-    let backgroundImageController: ScrollableImageController
+    let backgroundController: UIViewController
     let foregroundController: UIViewController
     
-    public init(backgroundImage: UIImage, controller: UIViewController) {
-        self.backgroundImageController = ScrollableImageControllerFactory.make(image: backgroundImage)
-        self.foregroundController = controller
+    public init(backgroundImage: UIImage, foregroundController: UIViewController) {
+        self.backgroundController = ImageControllerFactory.make(image: backgroundImage)
+        self.foregroundController = foregroundController
+    }
+    
+    public init(backgroundController: UIViewController, foregroundController: UIViewController) {
+        self.backgroundController = backgroundController
+        self.foregroundController = foregroundController
     }
 }
 
@@ -40,14 +45,14 @@ public struct PageContent {
  * ParallaxScrollViewController view
  |   |   * Background scrollview
  |   |   |   * Background stackview
- |   |   |   |   * For each page: ScrollableImageController view
- |   |   |   |   |   * scrollview
- |   |   |   |   |   |   * contentview
- |   |   |   |   |   |   |   * page imageview
+ |   |   |   |   * For each page:
+ |   |   |   |   |   * Scrollview
+ |   |   |   |   |   |   * Page BackgroundController's view
  |   |   * Foreground scrollview
  |   |   |   * Foreground stackview
- |   |   |   |   * For each page: scrollview
- |   |   |   |   |   * Foregroundcontroller's view
+ |   |   |   |   * For each page:
+ |   |   |   |   |   * Scrollview
+ |   |   |   |   |   |   * Page ForegroundController's view
 */
 
 public class ParallaxScrollViewController: UIViewController {
@@ -140,12 +145,16 @@ public class ParallaxScrollViewController: UIViewController {
             }
             
             //Send viewWillDisappear
+            let previousBackgroundController = pages[currentPageIndex].backgroundController
             let previousForegroundController = pages[currentPageIndex].foregroundController
-            previousForegroundController.beginAppearanceTransition(false, animated: false)
+            previousBackgroundController.beginAppearanceTransition(false, animated: true)
+            previousForegroundController.beginAppearanceTransition(false, animated: true)
             
             //Send viewWillAppear
+            let newBackgroundController = pages[newValue].backgroundController
             let newForegroundController = pages[newValue].foregroundController
-            newForegroundController.beginAppearanceTransition(true, animated: false)
+            newBackgroundController.beginAppearanceTransition(true, animated: true)
+            newForegroundController.beginAppearanceTransition(true, animated: true)
         }
         didSet {
             guard oldValue != currentPageIndex else {
@@ -153,11 +162,15 @@ public class ParallaxScrollViewController: UIViewController {
             }
             
             //Send viewDidDisappear
+            let previousBackgroundController = pages[oldValue].backgroundController
             let previousForegroundController = pages[oldValue].foregroundController
+            previousBackgroundController.endAppearanceTransition()
             previousForegroundController.endAppearanceTransition()
             
             //Send viewDidAppear
+            let backgroundController = pages[currentPageIndex].backgroundController
             let foregroundController = pages[currentPageIndex].foregroundController
+            backgroundController.endAppearanceTransition()
             foregroundController.endAppearanceTransition()
             
             //Update page control
@@ -195,26 +208,34 @@ public class ParallaxScrollViewController: UIViewController {
     
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let backgroundController = pages[currentPageIndex].backgroundController
         let foregroundController = pages[currentPageIndex].foregroundController
-        foregroundController.beginAppearanceTransition(true, animated: false)
+        backgroundController.beginAppearanceTransition(true, animated: animated)
+        foregroundController.beginAppearanceTransition(true, animated: animated)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let backgroundController = pages[currentPageIndex].backgroundController
         let foregroundController = pages[currentPageIndex].foregroundController
+        backgroundController.endAppearanceTransition()
         foregroundController.endAppearanceTransition()
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        let backgroundController = pages[currentPageIndex].backgroundController
         let foregroundController = pages[currentPageIndex].foregroundController
-        foregroundController.beginAppearanceTransition(false, animated: false)
+        backgroundController.beginAppearanceTransition(false, animated: animated)
+        foregroundController.beginAppearanceTransition(false, animated: animated)
     }
     
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        let backgroundController = pages[currentPageIndex].backgroundController
         let foregroundController = pages[currentPageIndex].foregroundController
         foregroundController.endAppearanceTransition()
+        backgroundController.endAppearanceTransition()
     }
     
     
@@ -241,49 +262,31 @@ public class ParallaxScrollViewController: UIViewController {
     ///Adds all the pages to self
     private func add(pages: [PageContent]) {
         for page in pages {
-            add(page.backgroundImageController, to: backgroundStackView)
-            add(foregroundController: page.foregroundController, to: foregroundStackView)
+            add(controller: page.backgroundController, to: backgroundStackView)
+            add(controller: page.foregroundController, to: foregroundStackView)
         }
     }
     
-    private func add(foregroundController: UIViewController, to stackview: UIStackView) {
-        //TODO: Use this for background view controller too
+    private func add(controller: UIViewController, to stackview: UIStackView) {
+        addChildViewController(controller)
         
-        addChildViewController(foregroundController)
-        
+        let controllerView = controller.view!
         let scrollView = UIScrollView()
         scrollView.isScrollEnabled = false
-        let view = foregroundController.view!
+        scrollView.center(subview: controllerView)
         
-        scrollView.addSubview(view)
-        stackview.addArrangedSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.translatesAutoresizingMaskIntoConstraints = false
+        stackview.addArrangedSubview(scrollView)
         
-        NSLayoutConstraint.activate([
-            view.widthAnchor.constraint(equalTo: self.view.widthAnchor),
-            view.heightAnchor.constraint(equalTo: self.view.heightAnchor),
-
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.heightAnchor.constraint(equalTo: self.view.heightAnchor),
-            scrollView.widthAnchor.constraint(equalTo: self.view.widthAnchor)
-            ])
+        //Set scroll view content size
+        controllerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        controllerView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
         
-        foregroundController.didMove(toParentViewController: self)
-    }
-
-    ///Adds the received view controller to self.childViewControllers and adds it's view to to received stack view
-    private func add(_ childViewController: UIViewController, to stackView: UIStackView) {
-        //TODO: Remove when above is used for background controller too
-        addChildViewController(childViewController)
-        stackView.addArrangedSubview(childViewController.view)
-        childViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        childViewController.view.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        childViewController.view.heightAnchor.constraint(equalTo: stackView.heightAnchor).isActive = true
-        childViewController.didMove(toParentViewController: self)
+        //Set scroll view size
+        scrollView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        scrollView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
+        
+        controller.didMove(toParentViewController: self)
     }
     
     ///Returns the scroll view that contains the foreground controller's view at the received index, or nil if the index is out of bounds
@@ -298,11 +301,14 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     ///Returns the scrollable image view controller at the received index, or nil if the index is out of bounds
-    fileprivate func backgroundController(at index: Int) -> ScrollableImageController? {
+    fileprivate func backgroundControllerScrollView(at index: Int) -> UIScrollView? {
         guard index >= 0 && index < pages.count else {
             return nil
         }
-        return pages[index].backgroundImageController
+        guard let scrollView = pages[index].backgroundController.view.superview as? UIScrollView else {
+            fatalError("Background controller's superview must be a scrollView")
+        }
+        return scrollView
     }
 }
 
@@ -349,9 +355,9 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 let transitionDestinationElementIndex = isGoingBackwards ? transitionLeftElementIndex : transitionRightElementIndex
                 
                 //Fetch scroll views involved in the transition
-                let backgroundSourceScrollView = backgroundController(at: transitionSourceElementIndex)!.scrollView!
+                let backgroundSourceScrollView = backgroundControllerScrollView(at: transitionSourceElementIndex)!
                 let foregroundSourceScrollView = foregroundControllerScrollView(at: transitionSourceElementIndex)!
-                let backgroundDestinationScrollView = backgroundController(at: transitionDestinationElementIndex)?.scrollView!
+                let backgroundDestinationScrollView = backgroundControllerScrollView(at: transitionDestinationElementIndex)
                 let foregroundDestinationScrollView = foregroundControllerScrollView(at: transitionDestinationElementIndex)
 
                 //Calculate source XOffsets

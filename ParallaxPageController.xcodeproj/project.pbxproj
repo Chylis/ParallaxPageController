@@ -12,9 +12,8 @@
 		5F3C2F0D1D6B213E002C816B /* ParallaxScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */; };
 		5F3C2F0F1D6B21A1002C816B /* ParallaxScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */; };
 		5F4952681D6D8763001A0C2A /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4952671D6D8763001A0C2A /* UIView+Layout.swift */; };
-		5F8A73491D6C4E5C00A08821 /* ScrollableImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A73481D6C4E5C00A08821 /* ScrollableImageController.swift */; };
+		5F8A73491D6C4E5C00A08821 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A73481D6C4E5C00A08821 /* ImageController.swift */; };
 		5F8A734C1D6C53CA00A08821 /* UIScrollView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */; };
-		5FD21E001D6C4A2D00AAD75B /* ScrollableImageController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FD21DFF1D6C4A2D00AAD75B /* ScrollableImageController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,9 +24,8 @@
 		5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParallaxScrollViewController.swift; sourceTree = "<group>"; };
 		5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParallaxScrollViewController.xib; sourceTree = "<group>"; };
 		5F4952671D6D8763001A0C2A /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
-		5F8A73481D6C4E5C00A08821 /* ScrollableImageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableImageController.swift; sourceTree = "<group>"; };
+		5F8A73481D6C4E5C00A08821 /* ImageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
 		5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Utils.swift"; sourceTree = "<group>"; };
-		5FD21DFF1D6C4A2D00AAD75B /* ScrollableImageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScrollableImageController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,8 +71,7 @@
 				5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */,
 				5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */,
 				5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */,
-				5FD21DFF1D6C4A2D00AAD75B /* ScrollableImageController.xib */,
-				5F8A73481D6C4E5C00A08821 /* ScrollableImageController.swift */,
+				5F8A73481D6C4E5C00A08821 /* ImageController.swift */,
 				5F4952671D6D8763001A0C2A /* UIView+Layout.swift */,
 				5F1D007D1D6F1FB1001D4809 /* UIMotionEffect+Factory.swift */,
 			);
@@ -152,7 +149,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FD21E001D6C4A2D00AAD75B /* ScrollableImageController.xib in Resources */,
 				5F3C2F0F1D6B21A1002C816B /* ParallaxScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -167,7 +163,7 @@
 				5F4952681D6D8763001A0C2A /* UIView+Layout.swift in Sources */,
 				5F3C2F0D1D6B213E002C816B /* ParallaxScrollViewController.swift in Sources */,
 				5F1D007E1D6F1FB1001D4809 /* UIMotionEffect+Factory.swift in Sources */,
-				5F8A73491D6C4E5C00A08821 /* ScrollableImageController.swift in Sources */,
+				5F8A73491D6C4E5C00A08821 /* ImageController.swift in Sources */,
 				5F8A734C1D6C53CA00A08821 /* UIScrollView+Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
