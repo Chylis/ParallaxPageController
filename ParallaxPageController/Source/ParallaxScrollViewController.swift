@@ -187,6 +187,36 @@ public class ParallaxScrollViewController: UIViewController {
         }
     }
     
+    //MARK: View controller life cycle
+    
+    override public var shouldAutomaticallyForwardAppearanceMethods: Bool {
+        return false
+    }
+    
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let foregroundController = pages[currentPageIndex].foregroundController
+        foregroundController.beginAppearanceTransition(true, animated: false)
+    }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let foregroundController = pages[currentPageIndex].foregroundController
+        foregroundController.endAppearanceTransition()
+    }
+    
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let foregroundController = pages[currentPageIndex].foregroundController
+        foregroundController.beginAppearanceTransition(false, animated: false)
+    }
+    
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        let foregroundController = pages[currentPageIndex].foregroundController
+        foregroundController.endAppearanceTransition()
+    }
+    
     
     //MARK: Private
     
@@ -275,6 +305,11 @@ public class ParallaxScrollViewController: UIViewController {
         return pages[index].backgroundImageController
     }
 }
+
+
+
+
+//MARK: UIScrollViewDelegate
 
 extension ParallaxScrollViewController: UIScrollViewDelegate {
         
