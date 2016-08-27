@@ -143,35 +143,13 @@ public class ParallaxScrollViewController: UIViewController {
             guard newValue != currentPageIndex else {
                 return
             }
-            
-            //Send viewWillDisappear
-            let previousBackgroundController = pages[currentPageIndex].backgroundController
-            let previousForegroundController = pages[currentPageIndex].foregroundController
-            previousBackgroundController.beginAppearanceTransition(false, animated: true)
-            previousForegroundController.beginAppearanceTransition(false, animated: true)
-            
-            //Send viewWillAppear
-            let newBackgroundController = pages[newValue].backgroundController
-            let newForegroundController = pages[newValue].foregroundController
-            newBackgroundController.beginAppearanceTransition(true, animated: true)
-            newForegroundController.beginAppearanceTransition(true, animated: true)
+            sendWill(disappear: currentPageIndex, appear: newValue)
         }
         didSet {
             guard oldValue != currentPageIndex else {
                 return
             }
-            
-            //Send viewDidDisappear
-            let previousBackgroundController = pages[oldValue].backgroundController
-            let previousForegroundController = pages[oldValue].foregroundController
-            previousBackgroundController.endAppearanceTransition()
-            previousForegroundController.endAppearanceTransition()
-            
-            //Send viewDidAppear
-            let backgroundController = pages[currentPageIndex].backgroundController
-            let foregroundController = pages[currentPageIndex].foregroundController
-            backgroundController.endAppearanceTransition()
-            foregroundController.endAppearanceTransition()
+            sendDid(disappear: oldValue, appear: currentPageIndex)
             
             //Update page control
             pageControl.currentPage = currentPageIndex
@@ -208,34 +186,58 @@ public class ParallaxScrollViewController: UIViewController {
     
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let backgroundController = pages[currentPageIndex].backgroundController
-        let foregroundController = pages[currentPageIndex].foregroundController
-        backgroundController.beginAppearanceTransition(true, animated: animated)
-        foregroundController.beginAppearanceTransition(true, animated: animated)
+        sendWill(disappear: nil, appear: currentPageIndex, animated: animated)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let backgroundController = pages[currentPageIndex].backgroundController
-        let foregroundController = pages[currentPageIndex].foregroundController
-        backgroundController.endAppearanceTransition()
-        foregroundController.endAppearanceTransition()
+        sendDid(disappear: nil, appear: currentPageIndex)
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        let backgroundController = pages[currentPageIndex].backgroundController
-        let foregroundController = pages[currentPageIndex].foregroundController
-        backgroundController.beginAppearanceTransition(false, animated: animated)
-        foregroundController.beginAppearanceTransition(false, animated: animated)
+        sendWill(disappear: currentPageIndex, appear: nil, animated: animated)
     }
     
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        let backgroundController = pages[currentPageIndex].backgroundController
-        let foregroundController = pages[currentPageIndex].foregroundController
-        foregroundController.endAppearanceTransition()
-        backgroundController.endAppearanceTransition()
+        sendDid(disappear: currentPageIndex, appear: nil)
+    }
+    
+    /**
+     * - Sends 'viewWillDisappear' to the controllers at index 'from'
+     * - Sends 'viewWillAppear' to the controllers at index 'to'
+     */
+    private func sendWill(disappear: Int?, appear: Int?, animated: Bool = true) {
+        if let disappear = disappear {
+            let previousPage = pages[disappear]
+            previousPage.backgroundController.beginAppearanceTransition(false, animated: animated)
+            previousPage.foregroundController.beginAppearanceTransition(false, animated: animated)
+        }
+        
+        if let appear = appear {
+            let nextPage = pages[appear]
+            nextPage.backgroundController.beginAppearanceTransition(true, animated: animated)
+            nextPage.foregroundController.beginAppearanceTransition(true, animated: animated)
+        }
+    }
+    
+    /**
+     * - Sends 'viewWDidDisappear' to the controllers at index 'from'
+     * - Sends 'viewDidAppear' to the controllers at index 'to'
+     */
+    private func sendDid(disappear: Int?, appear: Int?) {
+        if let disappear = disappear {
+            let previousPage = pages[disappear]
+            previousPage.backgroundController.endAppearanceTransition()
+            previousPage.foregroundController.endAppearanceTransition()
+        }
+        
+        if let appear = appear {
+            let currentPage = pages[appear]
+            currentPage.backgroundController.endAppearanceTransition()
+            currentPage.foregroundController.endAppearanceTransition()
+        }
     }
     
     

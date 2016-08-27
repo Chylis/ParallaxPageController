@@ -1,7 +1,5 @@
 1) Configurable:
-  - Page control Y position
   - uiimageview contentmode
+  - Page control Y position
 
-
-Code:
-- clean up (e.g. forwarding of 'viewWill/Did appear/disappear events), etc
+2) Delegate (notify transition progress, etc)
