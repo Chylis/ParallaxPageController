@@ -65,19 +65,30 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
   let page4 = PageContent(backgroundImage: image4, foregroundController: vc4)
 
   //2. Create the ParallaxPageController:
-  let parallaxVc = ParallaxPageControllerFactory.make(pages: [page1,page2,page3,page4])
+  let parallaxVc = ParallaxScrollViewControllerFactory.make(pages: [page1,page2,page3,page4])
 
   //3. Configure the ParallaxPageController:
+  parallaxVc.delegate = self //Optional delegate to keep track of transition progress
   parallaxVc.view.backgroundColor = UIColor.white //To match the white background of the background images
+
+  //Configure the background transition effects
   parallaxVc.backgroundParallaxSpeedFactor = 1
   parallaxVc.backgroundTransitionEffect = .reveal
+
+  //Configure the foreground transition effects
   parallaxVc.foregroundParallaxSpeedFactor = 3
   parallaxVc.foregroundTransitionEffect = .appear
+
+  //Configure motion effects
   parallaxVc.applyHorizontalMotionEffect = true
   parallaxVc.motionEffectStrength = 10
+
+  //Configure borders to separate the pages
   parallaxVc.showBorders = true
   parallaxVc.borderWidth = 1
   parallaxVc.borderColor = UIColor.black
+
+  //Configure the UIPageControl appearance
   parallaxVc.pageControl.pageIndicatorTintColor = UIColor.black
   parallaxVc.pageControl.currentPageIndicatorTintColor = UIColor.red
 
@@ -86,6 +97,21 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
   window?.rootViewController = parallaxVc
   window?.makeKeyAndVisible()
   return true
+}
+
+extension AppDelegate: ParallaxScrollViewControllerDelegate {
+
+  public func parallaxScrollViewController(_ parallaxScrollViewController: ParallaxScrollViewController,
+                                           isTransitioningFrom sourcePage: PageContent,
+                                           to destinationPage: PageContent, 
+                                           with progress: CGFloat) {
+    let reverseProgress = (1 - progress)
+    sourcePage.foregroundController.view.alpha = reverseProgress
+    sourcePage.foregroundController.view.transform = CGAffineTransform(scaleX: reverseProgress*2, y: reverseProgress*2)
+
+    destinationPage.foregroundController.view.alpha = progress
+    destinationPage.foregroundController.view.transform = CGAffineTransform(scaleX: progress*2, y: progress*2)
+  }
 }
 ```
 

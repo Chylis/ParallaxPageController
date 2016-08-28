@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ParallaxPageControllerFactory {
+public struct ParallaxScrollViewControllerFactory {
     
     static public func make(pages: [PageContent]) -> ParallaxScrollViewController {
         
@@ -24,8 +24,8 @@ public struct ParallaxPageControllerFactory {
 
 public struct PageContent {
     
-    let backgroundController: UIViewController
-    let foregroundController: UIViewController
+    public let backgroundController: UIViewController
+    public let foregroundController: UIViewController
     
     public init(backgroundImage: UIImage, foregroundController: UIViewController) {
         self.backgroundController = ImageControllerFactory.make(image: backgroundImage)
@@ -36,6 +36,23 @@ public struct PageContent {
         self.backgroundController = backgroundController
         self.foregroundController = foregroundController
     }
+}
+
+
+public protocol ParallaxScrollViewControllerDelegate {
+    
+    /**
+     Called when the ParallaxScrollViewController is transitioning between two pages.
+     
+     - parameter parallaxScrollViewController: The ParallaxScrollViewController
+     - parameter sourcePage: The source page of the transition
+     - parameter destinationPage: The destination page of the transition
+     - parameter progress: A value between 0 and 1, indicating the transition progress.
+     */
+    func parallaxScrollViewController(_ parallaxScrollViewController: ParallaxScrollViewController,
+                                      isTransitioningFrom sourcePage: PageContent,
+                                      to destinationPage: PageContent,
+                                      with progress: CGFloat)
 }
 
 /*
@@ -66,6 +83,8 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     //MARK: Public
+    
+    public var delegate: ParallaxScrollViewControllerDelegate?
     
     @IBOutlet public weak var pageControl: UIPageControl!
     
@@ -372,6 +391,11 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 
                 //Keep background scroll view in sync with foreground scroll view
                 self.backgroundScrollView.contentOffset = scrollView.contentOffset
+                
+                
+                notifyDelegateOfTransition(fromIndex: transitionSourceElementIndex,
+                                           toIndex: transitionDestinationElementIndex,
+                                           progress: sourceTransitionProgress)
             }
         }
     
@@ -381,6 +405,19 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
     
     private func applyForegroundParallaxEffect(to value: CGFloat) -> CGFloat {
         return value * foregroundParallaxSpeedFactor * CGFloat(foregroundTransitionEffect.rawValue)
+    }
+    
+    private func notifyDelegateOfTransition(fromIndex: Int, toIndex: Int, progress: CGFloat) {
+        guard progress != 0, fromIndex >= 0, toIndex < pages.count else {
+            return
+        }
+        
+//        print("From: \(fromIndex), to: \(toIndex), progress: \(normalisedProgress)")
+        let normalisedProgress = abs(progress)
+        self.delegate?.parallaxScrollViewController(self,
+                                                    isTransitioningFrom: pages[fromIndex],
+                                                    to: pages[toIndex],
+                                                    with: normalisedProgress)
     }
     
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
