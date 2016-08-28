@@ -120,6 +120,5 @@ extension AppDelegate: ParallaxScrollViewControllerDelegate {
 ## Known Issues:
 -- 
 ## TODO:
-- Configurable background image content mode
 
 Feel free to contribute!

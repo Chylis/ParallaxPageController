@@ -27,8 +27,10 @@ public struct PageContent {
     public let backgroundController: UIViewController
     public let foregroundController: UIViewController
     
-    public init(backgroundImage: UIImage, foregroundController: UIViewController) {
-        self.backgroundController = ImageControllerFactory.make(image: backgroundImage)
+    public init(backgroundImage: UIImage,
+                backgroundImageContentMode: UIViewContentMode = UIViewContentMode.scaleToFill,
+                foregroundController: UIViewController) {
+        self.backgroundController = ImageControllerFactory.make(image: backgroundImage, contentMode: backgroundImageContentMode)
         self.foregroundController = foregroundController
     }
     

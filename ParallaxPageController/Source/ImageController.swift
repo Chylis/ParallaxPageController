@@ -12,8 +12,8 @@ import UIKit
 
 struct ImageControllerFactory {
     
-    static func make(image: UIImage) -> ImageController {
-        return ImageController(image: image)
+    static func make(image: UIImage, contentMode: UIViewContentMode) -> ImageController {
+        return ImageController(image: image, contentMode: contentMode)
     }
 }
 
@@ -22,11 +22,13 @@ class ImageController: UIViewController {
     //MARK: Properties
     
     let image: UIImage
+    let contentMode: UIViewContentMode
     
     //MARK: Initialisation
     
-    init(image: UIImage) {
+    init(image: UIImage, contentMode: UIViewContentMode) {
         self.image = image
+        self.contentMode = contentMode
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,6 +39,8 @@ class ImageController: UIViewController {
     //MARK: Life cycle
     
     override func loadView() {
-        self.view = UIImageView(image: image)
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = contentMode
+        self.view = imageView
     }
 }
