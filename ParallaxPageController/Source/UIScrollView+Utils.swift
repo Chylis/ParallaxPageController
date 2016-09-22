@@ -1,6 +1,6 @@
 //
 //  UIScrollView+Utils.swift
-//  WebWrapper
+//  ParallaxScrollViewController
 //
 //  Created by Magnus Eriksson on 14/01/16.
 //  Copyright © 2016 Apegroup. All rights reserved.
@@ -49,7 +49,7 @@ extension UIScrollView {
      Maximum value is 'contentSize.width - pageSize' (i.e. left of last page)
      */
     func maximumHorizontalOffset() -> CGFloat {
-        return contentSize.width - frame.width
+        return contentSize.width - pageSize()
     }
     
     /**
