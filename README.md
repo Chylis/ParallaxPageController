@@ -26,7 +26,7 @@
 
 ## Installation:
   - Fetch with Carthage, e.g:
-  - 'github "apegroup/apegroup-parallaxpagecontroller-ios"'
+  - 'github "chylis/ParallaxPageController"'
 
 ## Usage example:
 Get started with 3 easy steps:
