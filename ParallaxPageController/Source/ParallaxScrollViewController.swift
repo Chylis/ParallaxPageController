@@ -28,7 +28,7 @@ public struct PageContent {
     public let foregroundController: UIViewController
     
     public init(backgroundImage: UIImage,
-                backgroundImageContentMode: UIViewContentMode = UIViewContentMode.scaleToFill,
+                backgroundImageContentMode: UIView.ContentMode = UIView.ContentMode.scaleToFill,
                 foregroundController: UIViewController) {
         self.backgroundController = ImageControllerFactory.make(image: backgroundImage, contentMode: backgroundImageContentMode)
         self.foregroundController = foregroundController
@@ -291,7 +291,7 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     private func add(controller: UIViewController, to stackview: UIStackView) {
-        addChildViewController(controller)
+        addChild(controller)
         
         let controllerView = controller.view!
         let scrollView = UIScrollView()
@@ -309,7 +309,7 @@ public class ParallaxScrollViewController: UIViewController {
         scrollView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         scrollView.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
         
-        controller.didMove(toParentViewController: self)
+        controller.didMove(toParent: self)
     }
     
     ///Returns the scroll view that contains the foreground controller's view at the received index, or nil if the index is out of bounds

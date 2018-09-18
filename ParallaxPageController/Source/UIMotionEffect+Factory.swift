@@ -10,7 +10,7 @@ import Foundation
 
 extension UIMotionEffect {
     
-    class func make(strength: Int, type: UIInterpolatingMotionEffectType) -> UIInterpolatingMotionEffect {
+    class func make(strength: Int, type: UIInterpolatingMotionEffect.EffectType) -> UIInterpolatingMotionEffect {
             let keyPath = type == .tiltAlongHorizontalAxis ? "center.x" : "center.y"
             let motion = UIInterpolatingMotionEffect(keyPath: keyPath, type: type)
             motion.minimumRelativeValue = -strength

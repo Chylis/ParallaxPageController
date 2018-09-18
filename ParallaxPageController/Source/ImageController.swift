@@ -12,7 +12,7 @@ import UIKit
 
 struct ImageControllerFactory {
     
-    static func make(image: UIImage, contentMode: UIViewContentMode) -> ImageController {
+    static func make(image: UIImage, contentMode: UIView.ContentMode) -> ImageController {
         return ImageController(image: image, contentMode: contentMode)
     }
 }
@@ -22,11 +22,11 @@ class ImageController: UIViewController {
     //MARK: Properties
     
     let image: UIImage
-    let contentMode: UIViewContentMode
+    let contentMode: UIView.ContentMode
     
     //MARK: Initialisation
     
-    init(image: UIImage, contentMode: UIViewContentMode) {
+    init(image: UIImage, contentMode: UIView.ContentMode) {
         self.image = image
         self.contentMode = contentMode
         super.init(nibName: nil, bundle: nil)
