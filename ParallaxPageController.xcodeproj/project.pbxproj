@@ -10,7 +10,6 @@
 		5F1D007E1D6F1FB1001D4809 /* UIMotionEffect+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1D007D1D6F1FB1001D4809 /* UIMotionEffect+Factory.swift */; };
 		5F3C2EDD1D6B1BE0002C816B /* ParallaxPageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F3C2EDB1D6B1BE0002C816B /* ParallaxPageController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F3C2F0D1D6B213E002C816B /* ParallaxScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */; };
-		5F3C2F0F1D6B21A1002C816B /* ParallaxScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */; };
 		5F4952681D6D8763001A0C2A /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4952671D6D8763001A0C2A /* UIView+Layout.swift */; };
 		5F8A73491D6C4E5C00A08821 /* ImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A73481D6C4E5C00A08821 /* ImageController.swift */; };
 		5F8A734C1D6C53CA00A08821 /* UIScrollView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */; };
@@ -22,7 +21,6 @@
 		5F3C2EDB1D6B1BE0002C816B /* ParallaxPageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParallaxPageController.h; sourceTree = "<group>"; };
 		5F3C2EDC1D6B1BE0002C816B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParallaxScrollViewController.swift; sourceTree = "<group>"; };
-		5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParallaxScrollViewController.xib; sourceTree = "<group>"; };
 		5F4952671D6D8763001A0C2A /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		5F8A73481D6C4E5C00A08821 /* ImageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageController.swift; sourceTree = "<group>"; };
 		5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Utils.swift"; sourceTree = "<group>"; };
@@ -70,7 +68,6 @@
 			children = (
 				5F8A734B1D6C53CA00A08821 /* UIScrollView+Utils.swift */,
 				5F3C2F0C1D6B213E002C816B /* ParallaxScrollViewController.swift */,
-				5F3C2F0E1D6B21A1002C816B /* ParallaxScrollViewController.xib */,
 				5F8A73481D6C4E5C00A08821 /* ImageController.swift */,
 				5F4952671D6D8763001A0C2A /* UIView+Layout.swift */,
 				5F1D007D1D6F1FB1001D4809 /* UIMotionEffect+Factory.swift */,
@@ -150,7 +147,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F3C2F0F1D6B21A1002C816B /* ParallaxScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

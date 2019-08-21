@@ -12,17 +12,12 @@ public struct ParallaxScrollViewControllerFactory {
     
     static public func make(pages: [PageContent]) -> ParallaxScrollViewController {
         
-        let nib = UINib(nibName: String(describing: ParallaxScrollViewController.self),
-                        bundle: Bundle(for: ParallaxScrollViewController.self))
-            .instantiate(withOwner: nil, options: nil)
-        
-        let vc = nib.first as! ParallaxScrollViewController
-        vc.pages = pages
+        let vc = ParallaxScrollViewController(pages: pages)
         return vc
     }
 }
 
-public struct PageContent {
+public class PageContent: NSObject {
     
     public let backgroundController: UIViewController
     public let foregroundController: UIViewController
@@ -52,8 +47,10 @@ public protocol ParallaxScrollViewControllerDelegate {
      - parameter progress: A value between 0 and 1, indicating the transition progress.
      */
     func parallaxScrollViewController(_ parallaxScrollViewController: ParallaxScrollViewController,
-                                      isTransitioningFrom sourcePage: PageContent,
-                                      to destinationPage: PageContent,
+                                      isTransitioningFrom sourceIndex: Int,
+                                      sourcePage: PageContent,
+                                      to destinationIndex: Int,
+                                      destinationPage: PageContent,
                                       with progress: CGFloat)
 }
 
@@ -86,9 +83,21 @@ public class ParallaxScrollViewController: UIViewController {
     
     //MARK: Public
     
+    public init(pages: [PageContent]) {
+        self.pages = []
+        super.init(nibName: nil, bundle: nil)
+        defer {
+            self.pages = pages
+        }
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init coder not implemented")
+    }
+    
     public var delegate: ParallaxScrollViewControllerDelegate?
     
-    @IBOutlet public weak var pageControl: UIPageControl!
+    public let pageControl = UIPageControl()
     
     ///The transition effect to apply to the background view when scrolling
     public var backgroundTransitionEffect = TransitionEffect.reveal
@@ -139,16 +148,38 @@ public class ParallaxScrollViewController: UIViewController {
     
     //MARK: IBOutlets
     
-    @IBOutlet weak var backgroundScrollView: UIScrollView!
-    @IBOutlet weak var backgroundStackView: UIStackView!
+    private lazy var backgroundScrollView: UIScrollView = makeScrollView()
+    private lazy var backgroundStackView: UIStackView = makeStackView()
     
-    @IBOutlet weak var foregroundScrollView: UIScrollView!
-    @IBOutlet weak var foregroundStackView: UIStackView!
+    private lazy var foregroundScrollView: UIScrollView = makeScrollView()
+    private lazy var foregroundStackView: UIStackView = makeStackView()
+    
+    private func makeScrollView() -> UIScrollView {
+        let sv = UIScrollView()
+        sv.isPagingEnabled = true
+        sv.isDirectionalLockEnabled = true
+        sv.bounces = false
+        sv.alwaysBounceHorizontal = false
+        sv.showsVerticalScrollIndicator = false
+        sv.showsHorizontalScrollIndicator = false
+        sv.clipsToBounds = true
+        sv.delegate = self
+        return sv
+    }
+    
+    private func makeStackView() -> UIStackView {
+        let sv = UIStackView(arrangedSubviews: [])
+        sv.axis = .horizontal
+        sv.alignment = .center
+        sv.distribution = .fillEqually
+        sv.spacing = 0.0
+        return sv
+    }
     
     
     //MARK: Properties
     
-    fileprivate var pages: [PageContent] = [] {
+    private var pages: [PageContent] {
         willSet {
             //TODO: remove previous pages
         }
@@ -184,7 +215,7 @@ public class ParallaxScrollViewController: UIViewController {
     
     override public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
-        pageIndexBeforeTraitCollectionChange = foregroundScrollView.currentPage()
+        pageIndexBeforeTraitCollectionChange = max(0, foregroundScrollView.currentPage())
     }
     
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -200,6 +231,46 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     //MARK: View controller life cycle
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(backgroundScrollView)
+        backgroundScrollView.addSubview(backgroundStackView)
+        view.addSubview(foregroundScrollView)
+        foregroundScrollView.addSubview(foregroundStackView)
+        view.addSubview(pageControl)
+        
+        backgroundScrollView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        backgroundScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        backgroundScrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        backgroundScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        backgroundStackView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundStackView.leadingAnchor.constraint(equalTo: backgroundScrollView.leadingAnchor).isActive = true
+        backgroundStackView.trailingAnchor.constraint(equalTo: backgroundScrollView.trailingAnchor).isActive = true
+        backgroundStackView.topAnchor.constraint(equalTo: backgroundScrollView.topAnchor).isActive = true
+        backgroundStackView.bottomAnchor.constraint(equalTo: backgroundScrollView.bottomAnchor).isActive = true
+        backgroundStackView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        
+        foregroundScrollView.translatesAutoresizingMaskIntoConstraints = false
+        foregroundScrollView.centerXAnchor.constraint(equalTo: backgroundScrollView.centerXAnchor).isActive = true
+        foregroundScrollView.centerYAnchor.constraint(equalTo: backgroundScrollView.centerYAnchor).isActive = true
+        foregroundScrollView.widthAnchor.constraint(equalTo: backgroundScrollView.widthAnchor).isActive = true
+        foregroundScrollView.heightAnchor.constraint(equalTo: backgroundScrollView.heightAnchor).isActive = true
+        
+        foregroundStackView.translatesAutoresizingMaskIntoConstraints = false
+        foregroundStackView.leadingAnchor.constraint(equalTo: foregroundScrollView.leadingAnchor).isActive = true
+        foregroundStackView.trailingAnchor.constraint(equalTo: foregroundScrollView.trailingAnchor).isActive = true
+        foregroundStackView.topAnchor.constraint(equalTo: foregroundScrollView.topAnchor).isActive = true
+        foregroundStackView.bottomAnchor.constraint(equalTo: foregroundScrollView.bottomAnchor).isActive = true
+        foregroundStackView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        pageControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
+    }
     
     override public var shouldAutomaticallyForwardAppearanceMethods: Bool {
         return false
@@ -266,7 +337,7 @@ public class ParallaxScrollViewController: UIViewController {
     
     private func updateBorders() {
         for index in 0..<pages.count {
-            let scrollview = foregroundControllerScrollView(at: index)!
+            let scrollview = foregroundControllerScrollView(at: index)
             scrollview.layer.borderWidth = showBorders ? borderWidth : 0
             scrollview.layer.borderColor = borderColor.cgColor
         }
@@ -313,10 +384,7 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     ///Returns the scroll view that contains the foreground controller's view at the received index, or nil if the index is out of bounds
-    fileprivate func foregroundControllerScrollView(at index: Int) -> UIScrollView? {
-        guard index >= 0 && index < pages.count else {
-            return nil
-        }
+    fileprivate func foregroundControllerScrollView(at index: Int) -> UIScrollView {
         guard let scrollView = pages[index].foregroundController.view.superview as? UIScrollView else {
             fatalError("Foreground controller's superview must be a scrollView")
         }
@@ -324,10 +392,7 @@ public class ParallaxScrollViewController: UIViewController {
     }
     
     ///Returns the scrollable image view controller at the received index, or nil if the index is out of bounds
-    fileprivate func backgroundControllerScrollView(at index: Int) -> UIScrollView? {
-        guard index >= 0 && index < pages.count else {
-            return nil
-        }
+    fileprivate func backgroundControllerScrollView(at index: Int) -> UIScrollView {
         guard let scrollView = pages[index].backgroundController.view.superview as? UIScrollView else {
             fatalError("Background controller's superview must be a scrollView")
         }
@@ -341,18 +406,27 @@ public class ParallaxScrollViewController: UIViewController {
 //MARK: UIScrollViewDelegate
 
 extension ParallaxScrollViewController: UIScrollViewDelegate {
-        
+    
         public func scrollViewDidScroll(_ scrollView: UIScrollView) {
             if scrollView == foregroundScrollView {
                 
-                let isGoingBackwards = scrollView.currentPage() < currentPageIndex
+                //Keep background scroll view in sync with foreground scroll view
+                backgroundScrollView.contentOffset = scrollView.contentOffset
+                
+                let currentPage = scrollView.currentPage()
+                let isScrollingWithinBounds = currentPage >= 0 && currentPage < pages.count - 1
+                guard isScrollingWithinBounds else {
+                    return
+                }
+                
+                let isGoingBackwards = currentPage < currentPageIndex
                 
                 //"percentScrolledInPage" represents the X-scroll percentage within the current page, starting at index 0.
                 //E.g. if the scroll view is 50% between page 5 and 6, the  will be 4.5
                 let percentScrolledInPage = scrollView.horizontalPercentScrolledInCurrentPage()
                 
                 //The transition progress of the leftmost page involved in the transition
-                let leftTransitionProgress = percentScrolledInPage - CGFloat(scrollView.currentPage())
+                let leftTransitionProgress = percentScrolledInPage - CGFloat(currentPage)
                 
                 //The transition progress of the rightmost page involved in the transition (the opposite of the leftTransitionProgress)
                 let rightTransitionProgress = (1 - leftTransitionProgress)
@@ -366,7 +440,7 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 let destTransitionProgressPercentage = destTransitionProgress * 100
                 
                 //The index of the leftmost element involved in the transition
-                let transitionLeftElementIndex = scrollView.currentPage()
+                let transitionLeftElementIndex = currentPage
                 
                 //The index of the rightmost element involved in the transition
                 let transitionRightElementIndex = transitionLeftElementIndex + 1
@@ -378,8 +452,8 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 let transitionDestinationElementIndex = isGoingBackwards ? transitionLeftElementIndex : transitionRightElementIndex
                 
                 //Fetch scroll views involved in the transition
-                let backgroundSourceScrollView = backgroundControllerScrollView(at: transitionSourceElementIndex)!
-                let foregroundSourceScrollView = foregroundControllerScrollView(at: transitionSourceElementIndex)!
+                let backgroundSourceScrollView = backgroundControllerScrollView(at: transitionSourceElementIndex)
+                let foregroundSourceScrollView = foregroundControllerScrollView(at: transitionSourceElementIndex)
                 let backgroundDestinationScrollView = backgroundControllerScrollView(at: transitionDestinationElementIndex)
                 let foregroundDestinationScrollView = foregroundControllerScrollView(at: transitionDestinationElementIndex)
 
@@ -388,12 +462,8 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
                 foregroundSourceScrollView.contentOffset.x = applyForegroundParallaxEffect(to: sourceTransitionProgressPercentage)
                 
                 //Calculate destination XOffsets
-                backgroundDestinationScrollView?.contentOffset.x = applyBackgroundParallaxEffect(to: destTransitionProgressPercentage)
-                foregroundDestinationScrollView?.contentOffset.x = applyForegroundParallaxEffect(to: destTransitionProgressPercentage)
-                
-                //Keep background scroll view in sync with foreground scroll view
-                self.backgroundScrollView.contentOffset = scrollView.contentOffset
-                
+                backgroundDestinationScrollView.contentOffset.x = applyBackgroundParallaxEffect(to: destTransitionProgressPercentage)
+                foregroundDestinationScrollView.contentOffset.x = applyForegroundParallaxEffect(to: destTransitionProgressPercentage) 
                 
                 notifyDelegateOfTransition(fromIndex: transitionSourceElementIndex,
                                            toIndex: transitionDestinationElementIndex,
@@ -410,29 +480,31 @@ extension ParallaxScrollViewController: UIScrollViewDelegate {
     }
     
     private func notifyDelegateOfTransition(fromIndex: Int, toIndex: Int, progress: CGFloat) {
-        guard progress != 0, fromIndex >= 0, toIndex < pages.count else {
+        guard progress != 0 else {
             return
         }
         
 //        print("From: \(fromIndex), to: \(toIndex), progress: \(normalisedProgress)")
         let normalisedProgress = abs(progress)
         self.delegate?.parallaxScrollViewController(self,
-                                                    isTransitioningFrom: pages[fromIndex],
-                                                    to: pages[toIndex],
+                                                    isTransitioningFrom: fromIndex,
+                                                    sourcePage: pages[fromIndex],
+                                                    to: toIndex,
+                                                    destinationPage: pages[toIndex],
                                                     with: normalisedProgress)
     }
     
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         if scrollView == foregroundScrollView {
             //Save the current page index
-            currentPageIndex = scrollView.currentPage()
+            currentPageIndex = max(0, scrollView.currentPage())
         }
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView == foregroundScrollView {
             //Save the current page index
-            currentPageIndex = scrollView.currentPage()
+            currentPageIndex = max(0, scrollView.currentPage())
         }
     }
 }
